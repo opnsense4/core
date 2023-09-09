@@ -50,6 +50,11 @@ class UniqueConstraint extends BaseConstraint
             throw new \Exception('UniqueConstraint allowEmpty and addFields cannot be used in tandem');
         }
 
+        $exceptionMask = !empty($this->getOption('exceptionMask')) ? true : false;
+        if ($exceptionMask && !empty($this->getOptionValueList('addFields'))) {
+	    throw new \Exception('UniqueConstraint exceptionMask and addFields cannot be used in tandem');
+        }
+
         $node = $this->getOption('node');
         $fieldSeparator = chr(10) . chr(0);
         if ($node) {
@@ -74,6 +79,11 @@ class UniqueConstraint extends BaseConstraint
                 $nodeKey = '';
                 foreach ($keyFields as $field) {
                     $nodeKey .= $fieldSeparator . $parentNode->$field;
+                }
+                if ($exceptionMask) {
+                    if (preg_match($this->getOption('exceptionMask'), $nodeKey)) {
+                        return true;
+                    }
                 }
                 // when an ArrayField is found in range, traverse nodes and compare keys
                 foreach ($containerNode->iterateItems() as $item) {

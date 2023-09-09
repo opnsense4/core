@@ -25,6 +25,7 @@
                     <check001>
                         <ValidationMessage>Address already assigned.</ValidationMessage>
                         <type>UniqueConstraint</type>
+                        <exceptionMask>/^fe[89ab][0-9a-f]:/i</exceptionMask>
                     </check001>
                 </Constraints>
             </subnet>
